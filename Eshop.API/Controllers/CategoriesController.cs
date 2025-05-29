@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Eshop.API.Helpers;
 using Eshop.Core.DTO;
 using Eshop.Core.Entities.Product;
 using Eshop.Core.Interfaces;
@@ -22,7 +23,7 @@ namespace Eshop.API.Controllers
                 var categories = await _work.CategoryRepository.GetAllAsync();
                 if(categories is null)
                 {
-                    return BadRequest();
+                    return BadRequest(new ResponseAPI(400));
                 }else
                 {
                     return Ok(categories);
@@ -44,7 +45,7 @@ namespace Eshop.API.Controllers
                 var category = await _work.CategoryRepository.GetByIdAsync(id);
                 if (category is null)
                 {
-                    return BadRequest();
+                    return BadRequest(new ResponseAPI(400, $"Can't found category id : {id}"));
                 }
                 else
                 {
@@ -65,7 +66,7 @@ namespace Eshop.API.Controllers
             {
                 var category = _mapper.Map<Category>(categoryDto);
                  await _work.CategoryRepository.AddAsync(category);
-                return Ok(new { message = "Item added Successfully!"});
+                return Ok(new ResponseAPI(200, "Item added Successfully!"));
             }
             catch (Exception ex)
             {
@@ -83,7 +84,7 @@ namespace Eshop.API.Controllers
             {
                 var category = _mapper.Map<Category>(categoryDto);
                 await _work.CategoryRepository.UpdateAsync(category);
-                 return Ok(new { message = "Category Updated Successfully!" });
+                 return Ok(new ResponseAPI(200, "Category Updated Successfully!"));
 
             }
             catch (Exception ex)
@@ -100,7 +101,7 @@ namespace Eshop.API.Controllers
             try
             {
                  await _work.CategoryRepository.DeleteAsync(id);
-                 return Ok(new { messgae = "Category deleted successfully!" });
+                 return Ok(new ResponseAPI(200, "Category deleted successfully!"));
             }
             catch (Exception ex)
             {
