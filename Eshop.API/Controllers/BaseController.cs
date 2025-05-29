@@ -1,4 +1,5 @@
-﻿using Eshop.Core.Interfaces;
+﻿using AutoMapper;
+using Eshop.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,9 +11,11 @@ namespace Eshop.API.Controllers
     {
 
         protected readonly IUnitOfWork _work;
-        public BaseController(IUnitOfWork work)
+        protected readonly IMapper _mapper;
+        public BaseController(IUnitOfWork work, IMapper mapper)
         {
                 _work = work;
+               _mapper = mapper;
         }
     }
 }

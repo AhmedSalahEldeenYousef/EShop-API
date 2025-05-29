@@ -1,4 +1,5 @@
-﻿using Eshop.Core.DTO;
+﻿using AutoMapper;
+using Eshop.Core.DTO;
 using Eshop.Core.Entities.Product;
 using Eshop.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -9,9 +10,10 @@ namespace Eshop.API.Controllers
 
     public class CategoriesController : BaseController
     {
-        public CategoriesController(IUnitOfWork work) : base(work)
+        public CategoriesController(IUnitOfWork work, IMapper mapper) : base(work, mapper)
         {
         }
+
         [HttpGet("get-all")]
         public async Task<IActionResult> get()
         {
@@ -61,11 +63,7 @@ namespace Eshop.API.Controllers
         {
             try
             {
-                var category = new Category()
-                {
-                    Name = categoryDto.Name,
-                    Description = categoryDto.Description
-                };
+                var category = _mapper.Map<Category>(categoryDto);
                  await _work.CategoryRepository.AddAsync(category);
                 return Ok(new { message = "Item added Successfully!"});
             }
@@ -83,13 +81,8 @@ namespace Eshop.API.Controllers
         {
             try
             {
-                var category = new Category()
-                {
-                    Description = categoryDto.Description,
-                    Name = categoryDto.Name,    
-                    Id  = categoryDto.id
-                };
-                 await _work.CategoryRepository.UpdateAsync(category);
+                var category = _mapper.Map<Category>(categoryDto);
+                await _work.CategoryRepository.UpdateAsync(category);
                  return Ok(new { message = "Category Updated Successfully!" });
 
             }
