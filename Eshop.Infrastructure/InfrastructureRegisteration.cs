@@ -14,9 +14,11 @@ namespace Eshop.Infrastructure
         public static IServiceCollection InfrastructureConfiguration(this IServiceCollection services)
         {
             services.AddScoped(typeof(IGenericRepository<>), typeof(IGenericRepository<>));
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
-            services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<IPhotoRepository, PhotoRepository>();
+            // services.AddScoped<ICategoryRepository, CategoryRepository>();
+           //  services.AddScoped<IProductRepository, ProductRepository>();
+           //  services.AddScoped<IPhotoRepository, PhotoRepository>();
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
             return services;
