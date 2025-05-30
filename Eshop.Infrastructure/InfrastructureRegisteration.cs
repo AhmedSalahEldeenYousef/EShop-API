@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Eshop.Core.Interfaces;
+using Eshop.Core.Services;
 using Eshop.Infrastructure.Data;
 using Eshop.Infrastructure.Repositories;
+using Eshop.Infrastructure.Repositories.Service;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 
 namespace Eshop.Infrastructure
 {
@@ -25,6 +28,10 @@ namespace Eshop.Infrastructure
 
             //Applying Unite Of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddSingleton<IImageManagmentService, ImageManagmentService>();
+
+            services.AddSingleton<IFileProvider>(
+             new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
 
             //Applying DbContext 
 
