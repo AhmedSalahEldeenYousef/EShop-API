@@ -26,6 +26,34 @@ namespace Eshop.Infrastructure.Repositories
             _imageManagmentService = imageManagmentService;
         }
 
+        public async Task<IEnumerable<ProductDto>> GetAllAsync(string sort, int? categoryId)
+        {
+            var query = _context.Products.Include(C => C.Category).Include(p => p.photos).AsNoTracking();
+
+            if(categoryId.HasValue)
+            {
+                query = query.Where(p => p.CategoryId == categoryId);
+
+            }
+            if (!string.IsNullOrEmpty(sort))
+            {
+                switch (sort)
+                {
+                    case "PriceAscending":
+                        query = query.OrderBy(p => p.NewPrice);
+                        break;
+                    case "PriceDescending":
+                        query = query.OrderByDescending(p => p.NewPrice);
+                        break;
+                    default:
+                        query = query.OrderBy(p => p.Name);
+                        break;
+                }
+            }
+            //maping to product dto
+           var result = _mapper.Map<List<ProductDto>>(query);
+            return result;
+        }
         public async Task<bool> AddAsync(AddProductDto productDto)
         {
             if (productDto ==null) return false;

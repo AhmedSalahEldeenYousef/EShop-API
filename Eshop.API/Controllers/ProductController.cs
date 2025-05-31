@@ -15,19 +15,20 @@ namespace Eshop.API.Controllers
         }
 
         [HttpGet("get-all")]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(string? sort,int? categoryId )
         {
             try
             {
-                var products = await _work.ProductRepository
-                    .GetAllAsync(x=>x.Category, x=>x.photos);
+                var products = await _work.ProductRepository.GetAllAsync(sort, categoryId);
 
-                var result = _mapper.Map<List<ProductDto>>(products);
-                if (products is null)
-                {
-                    return BadRequest(new ResponseAPI(400));
-                }
-                return Ok(result);
+                //var products = await _work.ProductRepository.GetAllAsync(x=>x.Category, x=>x.photos);
+
+                //var result = _mapper.Map<List<ProductDto>>(products);
+                //if (products is null)
+                //{
+                //    return BadRequest(new ResponseAPI(400));
+                //}
+                return Ok(products);
             }
             catch (Exception ex)
             {
