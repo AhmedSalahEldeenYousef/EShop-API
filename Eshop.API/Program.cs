@@ -1,3 +1,4 @@
+using Eshop.API.middleware;
 using Eshop.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 
@@ -20,6 +21,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
 app.UseHttpsRedirection();
