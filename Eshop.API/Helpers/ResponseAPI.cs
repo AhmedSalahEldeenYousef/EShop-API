@@ -16,7 +16,8 @@
             {
                 200 => "Done Successfully",
                 400=>  "Bad Request",
-                401=> "UnAuthorized",
+                401=>  "UnAuthorized",
+                404=>  "Not Found Recources Api End Point Not Found",
                 500 => "Server Error",
                 _ => null,
             };
