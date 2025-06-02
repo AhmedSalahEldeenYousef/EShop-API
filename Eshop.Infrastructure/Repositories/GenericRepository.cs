@@ -25,6 +25,7 @@ namespace Eshop.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
+
         public async Task DeleteAsync(int id)
         {
             var entity = await _context.Set<T>().FindAsync(id);
@@ -67,6 +68,12 @@ namespace Eshop.Infrastructure.Repositories
         {
             _context.Entry(entity).State = EntityState.Modified;
             await _context.SaveChangesAsync();
+        }
+
+
+        public async Task<int> CoutAsync()
+        {
+          return await _context.Set<T>().CountAsync();
         }
     }
 }

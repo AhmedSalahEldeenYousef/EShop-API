@@ -8,9 +8,11 @@ using Eshop.Core.DTO;
 using Eshop.Core.Entities.Product;
 using Eshop.Core.Interfaces;
 using Eshop.Core.Services;
+using Eshop.Core.Shared;
 using Eshop.Infrastructure.Data;
 using Eshop.Infrastructure.Repositories.Service;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Eshop.Infrastructure.Repositories
 {
@@ -26,30 +28,43 @@ namespace Eshop.Infrastructure.Repositories
             _imageManagmentService = imageManagmentService;
         }
 
-        public async Task<IEnumerable<ProductDto>> GetAllAsync(string sort, int? categoryId)
+        public async Task<IEnumerable<ProductDto>> GetAllAsync(ProductParams productParams)
         {
             var query = _context.Products.Include(C => C.Category).Include(p => p.photos).AsNoTracking();
 
-            if(categoryId.HasValue)
+            //filtraing by word
+            if (!string.IsNullOrEmpty(productParams.Search))
             {
-                query = query.Where(p => p.CategoryId == categoryId);
+                //query = query.Where(w => w.Name.ToLower().Contains(productParams.Search.ToLower())
+                //|| w.Description.ToLower().Contains(productParams.Search.ToLower()));
+                var SearchWords = productParams.Search.Split(' ');
+                query = query.Where(w => SearchWords.All(word =>
+                
+                    w.Name.ToLower().Contains(word.ToLower())
+                    || w.Description.ToLower().Contains(word.ToLower())
+                ));
+            }
+
+            //filtring by category id
+            if(productParams.CategoryId.HasValue)
+            {
+                query = query.Where(p => p.CategoryId == productParams.CategoryId);
 
             }
-            if (!string.IsNullOrEmpty(sort))
+            if (!string.IsNullOrEmpty(productParams.Sort))
             {
-                switch (sort)
+                query = productParams.Sort switch
                 {
-                    case "PriceAscending":
-                        query = query.OrderBy(p => p.NewPrice);
-                        break;
-                    case "PriceDescending":
-                        query = query.OrderByDescending(p => p.NewPrice);
-                        break;
-                    default:
-                        query = query.OrderBy(p => p.Name);
-                        break;
-                }
+                    "PriceAscending" => query.OrderBy(p => p.NewPrice),
+                    "PriceDescending" => query.OrderByDescending(p => p.NewPrice),
+                    _ => query.OrderBy(p => p.Name),
+                };
             }
+
+            //applying pagenation
+            //productParams.PageNumber = productParams.PageNumber > 0 ? productParams.PageNumber : 1;
+            //productParams.PageSize = productParams.PageSize > 0 ? productParams.PageSize : 3;
+            query = query.Skip((productParams.PageSize) * (productParams.PageNumber - 1)).Take(productParams.PageSize);
             //maping to product dto
            var result = _mapper.Map<List<ProductDto>>(query);
             return result;

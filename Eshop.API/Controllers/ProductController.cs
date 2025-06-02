@@ -3,6 +3,7 @@ using Eshop.API.Helpers;
 using Eshop.Core.DTO;
 using Eshop.Core.Entities.Product;
 using Eshop.Core.Interfaces;
+using Eshop.Core.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,11 +16,11 @@ namespace Eshop.API.Controllers
         }
 
         [HttpGet("get-all")]
-        public async Task<IActionResult> Get(string? sort,int? categoryId )
+        public async Task<IActionResult> Get([FromQuery]ProductParams productParams )
         {
             try
             {
-                var products = await _work.ProductRepository.GetAllAsync(sort, categoryId);
+                var products = await _work.ProductRepository.GetAllAsync(productParams);
 
                 //var products = await _work.ProductRepository.GetAllAsync(x=>x.Category, x=>x.photos);
 
@@ -28,7 +29,8 @@ namespace Eshop.API.Controllers
                 //{
                 //    return BadRequest(new ResponseAPI(400));
                 //}
-                return Ok(products);
+                var TotalCount = await _work.ProductRepository.CoutAsync();
+                return Ok(new Pagination<ProductDto>(productParams.PageSize, productParams.PageNumber, TotalCount, products));
             }
             catch (Exception ex)
             {
