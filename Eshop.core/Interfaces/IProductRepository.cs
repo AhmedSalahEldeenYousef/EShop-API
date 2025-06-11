@@ -12,7 +12,7 @@ namespace Eshop.Core.Interfaces
     public interface IProductRepository :IGenericRepository<Product>
     {
         //TODO::Handle Product Adding Images Using product dto
-         Task<IEnumerable<ProductDto>> GetAllAsync(ProductParams productParams);
+         Task<RetunProductDto> GetAllAsync(ProductParams productParams);
         Task<bool> AddAsync(AddProductDto productDto);
         Task<bool> UpdateAsync(UpdateProductDto updateProductDto);
         Task DeleteAsync(Product product);

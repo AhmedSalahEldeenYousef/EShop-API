@@ -11,6 +11,7 @@ namespace Eshop.Core.Interfaces
         public ICategoryRepository CategoryRepository { get;}
         public IProductRepository  ProductRepository { get; }
         public IPhotoRepository PhotoRepository { get; }
+        public ICustomerBasketRepository CustomerBasket { get;}
 
     }
 }

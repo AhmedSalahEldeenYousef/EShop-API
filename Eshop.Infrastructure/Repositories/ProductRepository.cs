@@ -28,7 +28,7 @@ namespace Eshop.Infrastructure.Repositories
             _imageManagmentService = imageManagmentService;
         }
 
-        public async Task<IEnumerable<ProductDto>> GetAllAsync(ProductParams productParams)
+        public async Task<RetunProductDto> GetAllAsync(ProductParams productParams)
         {
             var query = _context.Products.Include(C => C.Category).Include(p => p.photos).AsNoTracking();
 
@@ -61,13 +61,16 @@ namespace Eshop.Infrastructure.Repositories
                 };
             }
 
+
+            RetunProductDto retunProductDto = new RetunProductDto();
+            retunProductDto.TotalCount = query.Count();
             //applying pagenation
             //productParams.PageNumber = productParams.PageNumber > 0 ? productParams.PageNumber : 1;
             //productParams.PageSize = productParams.PageSize > 0 ? productParams.PageSize : 3;
             query = query.Skip((productParams.PageSize) * (productParams.PageNumber - 1)).Take(productParams.PageSize);
             //maping to product dto
-           var result = _mapper.Map<List<ProductDto>>(query);
-            return result;
+            retunProductDto.products  = _mapper.Map<List<ProductDto>>(query);
+            return retunProductDto;
         }
         public async Task<bool> AddAsync(AddProductDto productDto)
         {

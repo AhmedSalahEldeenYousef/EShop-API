@@ -71,7 +71,7 @@ namespace Eshop.API.middleware
             });
             if (DateNow - timestamp < _reateLimitWindow)
             {
-                if (count >= 8)
+                if (count >= 30) //8s
                 {
                     return false;
                 }

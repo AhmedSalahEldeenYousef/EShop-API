@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using StackExchange.Redis;
 
 namespace Eshop.Infrastructure
 {
@@ -33,6 +34,12 @@ namespace Eshop.Infrastructure
             services.AddSingleton<IFileProvider>(
              new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
 
+            //Adding Redies Connection
+            services.AddSingleton<IConnectionMultiplexer>(i =>
+            {
+                var config = ConfigurationOptions.Parse(configuration.GetConnectionString("redis"));
+                return ConnectionMultiplexer.Connect(config);
+            });
             //Applying DbContext 
 
             services.AddDbContext<AppDbContext>(op =>

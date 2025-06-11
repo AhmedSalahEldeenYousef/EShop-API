@@ -29,8 +29,8 @@ namespace Eshop.API.Controllers
                 //{
                 //    return BadRequest(new ResponseAPI(400));
                 //}
-                var TotalCount = await _work.ProductRepository.CoutAsync();
-                return Ok(new Pagination<ProductDto>(productParams.PageSize, productParams.PageNumber, TotalCount, products));
+                //var TotalCount = await _work.ProductRepository.CoutAsync();
+                return Ok(new Pagination<ProductDto>(productParams.PageSize, productParams.PageNumber, products.TotalCount, products.products));
             }
             catch (Exception ex)
             {
