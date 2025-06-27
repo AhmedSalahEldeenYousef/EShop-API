@@ -28,15 +28,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseHttpsRedirection();
+app.UseRouting();
+
 app.UseCors("CORSPolicy");
+//Authentication and Authorization should be added before UseRouting and after Middleware
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseStaticFiles();
 app.UseStatusCodePagesWithReExecute("/errors/{0}");
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
